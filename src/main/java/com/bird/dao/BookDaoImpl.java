@@ -9,7 +9,7 @@ import java.util.List;
 
 import javax.naming.NamingException;
 
-import com.bird.connetion.Connect;
+import com.bird.connection.Connect;
 import com.bird.idao.IBookDao;
 import com.bird.model.Book;
 

@@ -1,4 +1,4 @@
-package com.bird.connetion;
+package com.bird.connection;
 
 import java.sql.*;
 
