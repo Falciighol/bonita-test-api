@@ -1,5 +1,7 @@
 package com.bird.dto;
 
+import java.util.Random;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -25,4 +27,9 @@ public class Utils {
 
         return jsonObject;
     }
+
+    public static Integer getRandomNumber(int min, int max) {
+		Random random = new Random();
+		return random.nextInt(max - min) + min;
+	}
 }

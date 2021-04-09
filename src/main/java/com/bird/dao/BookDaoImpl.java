@@ -74,6 +74,37 @@ public class BookDaoImpl implements IBookDao {
 		
 		return books;
 	}
+
+	@Override
+	public List<Book> getById(Integer id, ResourceProvider rp) throws NamingException {
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		Book book = new Book();
+		
+		String sql = "SELECT * FROM book WHERE id = " + id + " ORDER BY id";
+		
+		List<Book> books= new ArrayList<Book>();
+		
+		try {			
+			conn = Connect.connect(rp);
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			if (rs.next()) {
+				book.setId(rs.getInt(1));
+				book.setName(rs.getString(2));
+				books.add(book);
+			}
+			stmt.close();
+			rs.close();
+			conn.close();
+		} catch (SQLException e) {
+			LOGGER.error("Error while getting data from DB: " + e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return books;
+	}
  
 	@Override
 	public boolean update(Book book, ResourceProvider rp) throws NamingException {

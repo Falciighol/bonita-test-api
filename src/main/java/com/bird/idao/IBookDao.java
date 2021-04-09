@@ -13,4 +13,5 @@ public interface IBookDao {
 	public List<Book> getAll(ResourceProvider rp) throws NamingException;
 	public boolean update(Book book, ResourceProvider rp) throws NamingException;
 	public boolean delete(Book book, ResourceProvider rp) throws NamingException;
+	public List<Book> getById(Integer id, ResourceProvider rp) throws NamingException;
 }

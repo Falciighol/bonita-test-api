@@ -16,25 +16,33 @@ public class BookController {
 	public BookController() {
 	}
 	
-	//llama al DAO para guardar un book
+	// Calls DAO to save a Book
 	public void save(Book book, ResourceProvider rp) throws NamingException {
 		IBookDao dao = new  BookDaoImpl();
 		dao.save(book, rp);
 	}
 	
-	//llama al DAO para actualizar un book
+	// Calls DAO to update a Book
 	public void update(Book book, ResourceProvider rp) throws NamingException {
 		IBookDao dao = new  BookDaoImpl();
 		dao.update(book, rp);
 	}
 	
-	//llama al DAO para eliminar un book
+	// Calls DAO to delete a Book
 	public void delete(Book book, ResourceProvider rp) throws NamingException {
 		IBookDao dao = new  BookDaoImpl();
 		dao.delete(book, rp);
 	}
 	
-	//llama al DAO para obtener todos los books y luego los muestra en la vista
+	// Calls DAO to get a specific Book
+	public List<Book> getById(Integer id, ResourceProvider rp) throws NamingException{
+		List<Book> books = new ArrayList<Book>();
+		IBookDao dao = new  BookDaoImpl();
+		books = dao.getById(id, rp);
+        return books;
+	}
+
+	// Calls DAO to get all Books
 	public List<Book> getBooks(ResourceProvider rp) throws NamingException{
 		List<Book> books = new ArrayList<Book>();
 		IBookDao dao = new  BookDaoImpl();

@@ -11,6 +11,7 @@ import org.json.simple.parser.ParseException;
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -43,11 +44,6 @@ public class Index extends AbstractIndex {
 
 	}
 
-	public Integer getRandomNumber(int min, int max) {
-		Random random = new Random();
-		return random.nextInt(max - min) + min;
-	}
-
 	/**
 	 * Execute business logic
 	 *
@@ -64,26 +60,56 @@ public class Index extends AbstractIndex {
 		Map<String, Object> result = new HashMap<>();
 		// Entities
 		Book book = new Book();
+		String queryID = null;
 		
 		try {
 			// Request Body
 			JSONObject reqBody = getRequestBody(req);
 			// Query Parameter
-			String queryID = req.getParameter("queryID");
+			queryID = req.getParameter("queryID");
 	
 			if (queryID.equals("addBook"))
 			{
-				book = new Book(getRandomNumber(100000, 999999), reqBody.get("name").toString());
+				book = new Book(Utils.getRandomNumber(100000, 999999), reqBody.get("name").toString());
 				bookController.save(book, context.getResourceProvider());
 				result.put("data", book);
+				result.put("message", "Successfully added!");
 			}
 			else if (queryID.equals("updateBook"))
 			{
 				book = new Book(Utils.toInteger(reqBody.get("id").toString()), reqBody.get("name").toString());
 				bookController.update(book, context.getResourceProvider());
 				result.put("data", book);
+				result.put("message", "Successfully updated!");
+			}
+			else if (queryID.equals("deleteBook"))
+			{
+				book = new Book(Utils.toInteger(reqBody.get("id").toString()), reqBody.get("name").toString());
+				bookController.delete(book, context.getResourceProvider());
+				result.put("data", book);
+				result.put("message", "Successfully deleted!");
+			}
+			else if (queryID.equals("getBooks"))
+			{
+				book = new Book(Utils.toInteger(reqBody.get("id").toString()), null);
+				List<Book> books = bookController.getBooks(context.getResourceProvider());
+				result.put("data", books);
+				result.put("message", "Successfully!");
+			}
+			else if (queryID.equals("getBookById"))
+			{
+				List<Book> books = bookController.getById(Utils.toInteger(reqBody.get("id").toString()), context.getResourceProvider());
+				result.put("data", books);
+				result.put("message", "Successfully!");
+			}
+			else
+			{
+				result.put("message", "The provided query '" + queryID + "' doesn't exist.");
+				result.put("data", null);
 			}
 		} catch (Exception e) {
+			result.put("message", "Error while executing bussiness logic [Result execute()].");
+			result.put("data", null);
 			LOGGER.error("Error while executing bussiness logic [Result execute()]", e);
 		}
 
