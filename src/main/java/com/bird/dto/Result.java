@@ -9,16 +9,16 @@ import java.util.Map;
 
 @JsonDeserialize(builder = Result.ResultBuilder.class)
 public class Result {
-    private final Map<String, Object> body;
+    private final Map<String, Object> result;
     @JsonIgnore
     private final LocalDate currentDate = LocalDate.now();
     
-    public Result(Map<String, Object> body) {
-        this.body = body;
+    public Result(Map<String, Object> result) {
+        this.result = result;
     }
 
     public Map<String, Object> getBody() {
-        return this.body;
+        return this.result;
     }
 
     public LocalDate getCurrentDate() {
@@ -27,15 +27,15 @@ public class Result {
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class ResultBuilder {
-        private Map<String, Object> body;
+        private Map<String, Object> result;
 
-        public ResultBuilder body(Map<String, Object> body) {
-            this.body =  body;
+        public ResultBuilder result(Map<String, Object> result) {
+            this.result =  result;
             return this;
         }
 
         public Result build() {
-            return new Result(body);
+            return new Result(result);
         }
     }
 

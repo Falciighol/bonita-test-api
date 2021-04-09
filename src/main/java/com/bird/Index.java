@@ -2,25 +2,25 @@ package com.bird;
 
 import com.bird.controller.BookController;
 import com.bird.dto.Result;
+import com.bird.dto.Utils;
 import com.bird.model.Book;
 
 import org.bonitasoft.web.extension.rest.RestAPIContext;
-import org.json.HTTP;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.json.simple.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import javax.naming.NamingException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static java.lang.String.format;
-
-import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
@@ -54,64 +54,62 @@ public class Index extends AbstractIndex {
 	 * @param context
 	 * @return Result
 	 * @throws NamingException
+	 * @throws ServletException
 	 */
 	@Override
-	protected Result execute(RestAPIContext context, HttpServletRequest req) throws NamingException {
+	protected Result execute(RestAPIContext context, HttpServletRequest req) throws NamingException, IOException, ServletException {
 		// Controllers
 		BookController bookController = new BookController();
 		// Response body
-		Map<String, Object> body = new HashMap<>();
+		Map<String, Object> result = new HashMap<>();
 		// Entities
 		Book book = new Book();
 		
 		try {
 			// Request Body
-			JSONObject reqBody = getBody(req);
+			JSONObject reqBody = getRequestBody(req);
 			// Query Parameter
-			String queryID = reqBody.getString("queryID");
+			String queryID = req.getParameter("queryID");
 	
-			if (queryID.equals("addBook")) {
-				book = new Book(getRandomNumber(100000, 999999), reqBody.getString("name"));
+			if (queryID.equals("addBook"))
+			{
+				book = new Book(getRandomNumber(100000, 999999), reqBody.get("name").toString());
 				bookController.save(book, context.getResourceProvider());
-				body.put("data", book);
-			} else if (queryID.equals("updateBook")) {
-				book = new Book(reqBody.getInt("id"), reqBody.getString("name"));
+				result.put("data", book);
+			}
+			else if (queryID.equals("updateBook"))
+			{
+				book = new Book(Utils.toInteger(reqBody.get("id").toString()), reqBody.get("name").toString());
 				bookController.update(book, context.getResourceProvider());
-				body.put("data", book);
+				result.put("data", book);
 			}
 		} catch (Exception e) {
 			LOGGER.error("Error while executing bussiness logic [Result execute()]", e);
 		}
 
 		return Result.builder()
-			.body(body)
+			.result(result)
 			.build();
 	}
 
-	private JSONObject getBody(HttpServletRequest request) throws IOException {
-		StringBuffer jb = new StringBuffer();
-		String line = null;
-		try {
-			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null)
-			jb.append(line);
-		} catch (Exception e) { /*report an error*/ }
+	private JSONObject getRequestBody(HttpServletRequest request) throws IOException, ServletException {
 		JSONObject jsonObject = null;
 		try {
-			jsonObject =  HTTP.toJSONObject(jb.toString());
-		} catch (JSONException e) {
-			// crash and burn
-			throw new IOException("Error parsing JSON request string");
-		}
-		if (jsonObject == null) {
-			throw new IOException("NULL JSON");
+			jsonObject = (JSONObject) Utils.toJSONObject(getStringBody(request));
+		} catch (Exception e) {
+			LOGGER.error("Error while trying to parse JSONObject [Index -> getBody()]", e);
 		}
 		return jsonObject;
-		// Work with the data using methods like...
-		// int someInt = jsonObject.getInt("intParamName");
-		// String someString = jsonObject.getString("stringParamName");
-		// JSONObject nestedObj = jsonObject.getJSONObject("nestedObjName");
-		// JSONArray arr = jsonObject.getJSONArray("arrayParamName");
-		// etc...
+	}
+
+	private String getStringBody(HttpServletRequest request) {		
+		// METHOD #2
+		String requestData = null;
+		try {
+			requestData = request.getReader().lines().collect(Collectors.joining());
+		} catch (IOException e) {
+			LOGGER.error("Error while trying to get body string [Index -> getStringBody()]", e);
+		}
+		return requestData;
 	}
 }

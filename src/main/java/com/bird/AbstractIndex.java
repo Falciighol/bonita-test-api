@@ -16,6 +16,7 @@ import org.bonitasoft.web.extension.rest.RestApiResponse;
 import org.bonitasoft.web.extension.rest.RestApiResponseBuilder;
 
 import javax.naming.NamingException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Properties;
@@ -58,6 +59,12 @@ public abstract class AbstractIndex implements RestApiController {
         } catch (NamingException e) {
             LOGGER.error("Error while executing bussiness logic", e);
             return jsonResponse(responseBuilder, SC_BAD_REQUEST, Error.builder().message(e.getMessage()).build());
+        } catch (IOException e) {
+            LOGGER.error("Error while executing bussiness logic", e);
+            return jsonResponse(responseBuilder, SC_BAD_REQUEST, Error.builder().message(e.getMessage()).build());
+        } catch (ServletException e) {
+            LOGGER.error("Error while executing bussiness logic", e);
+            return jsonResponse(responseBuilder, SC_BAD_REQUEST, Error.builder().message(e.getMessage()).build());
         }
 
         // Send the result as a JSON representation
@@ -65,7 +72,7 @@ public abstract class AbstractIndex implements RestApiController {
         return jsonResponse(responseBuilder, SC_OK, result);
     }
 
-    protected abstract Result execute(RestAPIContext context, HttpServletRequest request) throws NamingException ;
+    protected abstract Result execute(RestAPIContext context, HttpServletRequest request) throws NamingException, IOException, ServletException;
 
     protected abstract void validateInputParameters(HttpServletRequest request);
 
@@ -74,17 +81,17 @@ public abstract class AbstractIndex implements RestApiController {
      *
      * @param responseBuilder the Rest API response builder
      * @param httpStatus      the status of the response
-     * @param body            the response body
+     * @param result            the response body
      * @return a RestAPIResponse
      */
-    RestApiResponse jsonResponse(RestApiResponseBuilder responseBuilder, int httpStatus, Object body) {
+    RestApiResponse jsonResponse(RestApiResponseBuilder responseBuilder, int httpStatus, Object result) {
         try {
             return responseBuilder
                     .withResponseStatus(httpStatus)
-                    .withResponse(mapper.writeValueAsString(body))
+                    .withResponse(mapper.writeValueAsString(result))
                     .build();
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to write body response as JSON: " + body, e);
+            throw new RuntimeException("Failed to write body response as JSON: " + result, e);
         }
     }
 
