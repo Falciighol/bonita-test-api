@@ -6,14 +6,11 @@ import com.bird.dto.Utils;
 import com.bird.model.Book;
 
 import org.bonitasoft.web.extension.rest.RestAPIContext;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import javax.naming.NamingException;
@@ -94,13 +91,13 @@ public class Index extends AbstractIndex {
 				book = new Book(Utils.toInteger(reqBody.get("id").toString()), null);
 				List<Book> books = bookController.getBooks(context.getResourceProvider());
 				result.put("data", books);
-				result.put("message", "Successfully!");
+				result.put("message", "Books successfully retrieved!");
 			}
 			else if (queryID.equals("getBookById"))
 			{
 				List<Book> books = bookController.getById(Utils.toInteger(reqBody.get("id").toString()), context.getResourceProvider());
 				result.put("data", books);
-				result.put("message", "Successfully!");
+				result.put("message", "Books successfully retrieved!");
 			}
 			else
 			{
