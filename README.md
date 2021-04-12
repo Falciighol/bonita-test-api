@@ -18,7 +18,6 @@ You can import the project on your favorite IDE make sure you have the correct c
 Execute the code on the `demoDS.sql` file to create the database.
 
 > Note: if you change the database name, make sure to change it in the Data Source definition too.
->
 
 ## Data source configuration
 
@@ -61,4 +60,4 @@ Edit the file `bonita.xml` and add the Data Source:
 
 ## Testing
 
-+ Import the **Postman** collection & change the host (if not running at `localhost:8080`).
++ Import the **Postman** collection and change the host (if not running at `localhost:8080`).
