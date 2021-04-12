@@ -17,21 +17,30 @@ public class BookController {
 	}
 	
 	// Calls DAO to save a Book
-	public void save(Book book, ResourceProvider rp) throws NamingException {
+	public Boolean save(Book book, ResourceProvider rp) throws NamingException {
 		IBookDao dao = new  BookDaoImpl();
-		dao.save(book, rp);
+		Boolean status = false;
+		// Executes & saves the DAO transaction status
+		status = dao.save(book, rp);
+		return status;
 	}
 	
 	// Calls DAO to update a Book
-	public void update(Book book, ResourceProvider rp) throws NamingException {
+	public Boolean update(Book book, ResourceProvider rp) throws NamingException {
 		IBookDao dao = new  BookDaoImpl();
-		dao.update(book, rp);
+		Boolean status = false;
+		// Executes & saves the DAO transaction status
+		status = dao.update(book, rp);
+		return status;
 	}
 	
 	// Calls DAO to delete a Book
-	public void delete(Book book, ResourceProvider rp) throws NamingException {
+	public Boolean delete(Book book, ResourceProvider rp) throws NamingException {
 		IBookDao dao = new  BookDaoImpl();
-		dao.delete(book, rp);
+		Boolean status = false;
+		// Executes & saves the DAO transaction status
+		status = dao.delete(book, rp);
+		return status;
 	}
 	
 	// Calls DAO to get a specific Book

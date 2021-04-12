@@ -1,6 +1,7 @@
 package com.bird.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -24,17 +25,24 @@ public class BookDaoImpl implements IBookDao {
 	@Override
 	public boolean save(Book book, ResourceProvider rp) throws NamingException {
 		boolean added = false;
-		
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		Connection conn = null;
+		Integer rowsInserted = 0;
 		
-		String sql="INSERT INTO book values (" + book.getId() + ", '" + book.getName() + "')";
+		String sql="INSERT INTO book VALUES (?, ?)";
 		
 		try {			
 			conn = Connect.connect(rp);
-			stmt = conn.createStatement();
-			stmt.execute(sql);
-			added = true;
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setInt(1, book.getId());
+			stmt.setString(2, book.getName());
+
+			rowsInserted = stmt.executeUpdate();
+
+			if (rowsInserted > 0)
+				added = true;
+			
 			stmt.close();
 			conn.close();
 		} catch (SQLException e) {
@@ -50,7 +58,7 @@ public class BookDaoImpl implements IBookDao {
 		Statement stmt = null;
 		ResultSet rs = null;
 		
-		String sql = "SELECT * FROM book ORDER BY id";
+		String sql = "SELECT * FROM book ORDER BY name;";
 		
 		List<Book> books= new ArrayList<Book>();
 		
@@ -78,18 +86,19 @@ public class BookDaoImpl implements IBookDao {
 	@Override
 	public List<Book> getById(Integer id, ResourceProvider rp) throws NamingException {
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		Book book = new Book();
 		
-		String sql = "SELECT * FROM book WHERE id = " + id + " ORDER BY id";
+		String sql = "SELECT * FROM book WHERE id = ? ORDER BY name;";
 		
 		List<Book> books= new ArrayList<Book>();
 		
 		try {			
 			conn = Connect.connect(rp);
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(sql);
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, id);
+			rs = stmt.executeQuery();
 			if (rs.next()) {
 				book.setId(rs.getInt(1));
 				book.setName(rs.getString(2));
@@ -105,20 +114,30 @@ public class BookDaoImpl implements IBookDao {
 		
 		return books;
 	}
- 
+	
 	@Override
 	public boolean update(Book book, ResourceProvider rp) throws NamingException {
-		Connection connect= null;
-		Statement stmt= null;
-		
-		boolean updated=false;
-				
-		String sql="UPDATE book SET name='" + book.getName()+"' WHERE ID=" + book.getId();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		boolean updated = false;
+		Integer rowsUpdated = 0;
+
+		String sql="UPDATE book SET name=? WHERE id=?;";
+
 		try {
-			connect = Connect.connect(rp);
-			stmt = connect.createStatement();
-			stmt.execute(sql);
-			updated = true;
+			conn = Connect.connect(rp);
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setString(1, book.getName());
+			stmt.setInt(2, book.getId());
+
+			rowsUpdated = stmt.executeUpdate();
+
+			if (rowsUpdated > 0)
+				updated = true;
+
+			stmt.close();
+			conn.close();
 		} catch (SQLException e) {
             LOGGER.error("Error while updating DB data: " + e.getMessage());
 			e.printStackTrace();
@@ -128,17 +147,21 @@ public class BookDaoImpl implements IBookDao {
  
 	@Override
 	public boolean delete(Book book, ResourceProvider rp) throws NamingException {
-		Connection connect = null;
-		Statement stmt = null;
-		
 		boolean deleted = false;
+		Connection connect = null;
+		PreparedStatement stmt = null;
+		Integer rowsDeleted = 0;
 				
 		String sql = "DELETE FROM book WHERE ID=" + book.getId();
+
 		try {
 			connect = Connect.connect(rp);
-			stmt = connect.createStatement();
-			stmt.execute(sql);
-			deleted = true;
+			stmt = connect.prepareStatement(sql);
+			rowsDeleted = stmt.executeUpdate();
+
+			if (rowsDeleted > 0)
+				deleted = true;
+
 		} catch (SQLException e) {
 			LOGGER.error("Error while deleting data from DB: " + e.getMessage());
 			e.printStackTrace();

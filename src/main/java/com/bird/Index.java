@@ -8,6 +8,7 @@ import com.bird.model.Book;
 import org.bonitasoft.web.extension.rest.RestAPIContext;
 import org.json.simple.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,56 +58,72 @@ public class Index extends AbstractIndex {
 		Map<String, Object> result = new HashMap<>();
 		// Entities
 		Book book = new Book();
-		String queryID = null;
-		
+		List<Book> books = new ArrayList<Book>();
+		String queryID = "";
+		Boolean queryStatus = false;
+	
 		try {
 			// Request Body
-			JSONObject reqBody = getRequestBody(req);
+			JSONObject reqBody = null;
 			// Query Parameter
 			queryID = req.getParameter("queryID");
+			if (queryID == null || queryID.equals(""))
+			{
+				throw new Exception("The 'queryID' parameter is required.");
+			}
+			else if (!queryID.contains("get"))
+			{
+				reqBody = getRequestBody(req);
+			}
 	
 			if (queryID.equals("addBook"))
 			{
 				book = new Book(Utils.getRandomNumber(100000, 999999), reqBody.get("name").toString());
-				bookController.save(book, context.getResourceProvider());
+				queryStatus = bookController.save(book, context.getResourceProvider());
 				result.put("data", book);
-				result.put("message", "Successfully added!");
+				result.put("message", ((queryStatus) ? "Successfully added!" : "No records were added!"));
+				result.put("error", false);
 			}
 			else if (queryID.equals("updateBook"))
 			{
 				book = new Book(Utils.toInteger(reqBody.get("id").toString()), reqBody.get("name").toString());
-				bookController.update(book, context.getResourceProvider());
+				queryStatus = bookController.update(book, context.getResourceProvider());
 				result.put("data", book);
-				result.put("message", "Successfully updated!");
+				result.put("message", ((queryStatus) ? "Successfully updated!" : "No records were updated!"));
+				result.put("error", false);
 			}
 			else if (queryID.equals("deleteBook"))
 			{
 				book = new Book(Utils.toInteger(reqBody.get("id").toString()), reqBody.get("name").toString());
-				bookController.delete(book, context.getResourceProvider());
+				queryStatus = bookController.delete(book, context.getResourceProvider());
 				result.put("data", book);
-				result.put("message", "Successfully deleted!");
+				result.put("message", ((queryStatus) ? "Successfully deleted!" : "No records were deleted!"));
+				result.put("error", false);
 			}
 			else if (queryID.equals("getBooks"))
 			{
-				book = new Book(Utils.toInteger(reqBody.get("id").toString()), null);
-				List<Book> books = bookController.getBooks(context.getResourceProvider());
+				books = bookController.getBooks(context.getResourceProvider());
 				result.put("data", books);
-				result.put("message", "Books successfully retrieved!");
+				result.put("message", ((books.size() > 0) ? "Books successfully retrieved!" : "No books were found!"));
+				result.put("error", false);
 			}
 			else if (queryID.equals("getBookById"))
 			{
-				List<Book> books = bookController.getById(Utils.toInteger(reqBody.get("id").toString()), context.getResourceProvider());
+				books = bookController.getById(Utils.toInteger(req.getParameter("id")), context.getResourceProvider());
 				result.put("data", books);
-				result.put("message", "Books successfully retrieved!");
+				result.put("message", ((books.size() > 0) ? "Books successfully retrieved!" : "No books were found!"));
+				result.put("error", false);
 			}
 			else
 			{
 				result.put("message", "The provided query '" + queryID + "' doesn't exist.");
 				result.put("data", null);
+				result.put("error", true);
 			}
 		} catch (Exception e) {
-			result.put("message", "Error while executing bussiness logic [Result execute()].");
+			result.put("message", "Error while executing bussiness logic. " + e.getMessage());
 			result.put("data", null);
+			result.put("error", true);
 			LOGGER.error("Error while executing bussiness logic [Result execute()]", e);
 		}
 
