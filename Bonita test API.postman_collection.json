@@ -1,0 +1,324 @@
+{
+	"info": {
+		"_postman_id": "a8972122-d16b-4686-84ef-ca09eda39e04",
+		"name": "Bonita test API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Book",
+			"item": [
+				{
+					"name": "AddBook",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "{{JSESSIONID}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Bonita-API-Token",
+								"value": "{{X-Bonita-API-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"id\": 0,\r\n\t\"name\": \"El hombre duplicado\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host}}/bonita/API/extension/testApi?queryID=addBook",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"bonita",
+								"API",
+								"extension",
+								"testApi"
+							],
+							"query": [
+								{
+									"key": "queryID",
+									"value": "addBook"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateBook",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "{{JSESSIONID}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Bonita-API-Token",
+								"value": "{{X-Bonita-API-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"id\": 983354,\r\n\t\"name\": \"All you zombies\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host}}/bonita/API/extension/testApi?queryID=updateBook",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"bonita",
+								"API",
+								"extension",
+								"testApi"
+							],
+							"query": [
+								{
+									"key": "queryID",
+									"value": "updateBook"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteBook",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "{{JSESSIONID}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Bonita-API-Token",
+								"value": "{{X-Bonita-API-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"id\": 485418,\r\n\t\"name\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host}}/bonita/API/extension/testApi?queryID=deleteBook",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"bonita",
+								"API",
+								"extension",
+								"testApi"
+							],
+							"query": [
+								{
+									"key": "queryID",
+									"value": "deleteBook"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBooks",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Bonita-API-Token",
+								"value": "{{X-Bonita-API-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{host}}/bonita/API/extension/testApi?queryID=getBooks",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"bonita",
+								"API",
+								"extension",
+								"testApi"
+							],
+							"query": [
+								{
+									"key": "queryID",
+									"value": "getBooks"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBookById",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "{{JSESSIONID}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Bonita-API-Token",
+								"value": "{{X-Bonita-API-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{host}}/bonita/API/extension/testApi?queryID=getBookById&id=4",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"bonita",
+								"API",
+								"extension",
+								"testApi"
+							],
+							"query": [
+								{
+									"key": "queryID",
+									"value": "getBookById"
+								},
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Authentication",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"BONITA TEST\", function () {\r",
+									"\t// var jsonData = pm.response.json();\r",
+									"\tlet bonitaApiToken = pm.cookies.get(\"X-Bonita-API-Token\");\r",
+									"\tpm.collectionVariables.set(\"X-Bonita-API-Token\", bonitaApiToken);\r",
+									"\tconsole.info(\"X-Bonita-API-Token:\", bonitaApiToken)\r",
+									"\treturn true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "walter.bates",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "bpm",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}/bonita/loginservice",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"bonita",
+								"loginservice"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "69087561-4529-4631-a522-788d9cd4711a",
+			"key": "JSESSIONID",
+			"value": "JSESSIONID=EFD4B3BACC6CD63249189A4B6C720136",
+			"disabled": true
+		},
+		{
+			"id": "8e315a44-cfe7-4774-85e7-d0d686397f48",
+			"key": "X-Bonita-API-Token",
+			"value": "9c2e8051-e048-4dd9-9d8e-df11f8ef6e79"
+		},
+		{
+			"id": "658d1e9e-456e-477d-bf94-ce5ccb5aa38a",
+			"key": "host",
+			"value": "localhost:8080"
+		}
+	]
+}
