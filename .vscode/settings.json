@@ -7,42 +7,14 @@
             },
             "previewLimit": 50,
             "server": "localhost",
-            "port": 3307,
+            "port": 3306,
             "driver": "MySQL",
             "name": "MySql 8 Local",
             "database": "sys",
             "username": "root",
-            "password": "admin",
+            "password": "86YwEEupv#77pA8",
             "group": "Work",
             "connectionTimeout": 60
-        },
-        {
-            "mysqlOptions": {
-                "authProtocol": "default"
-            },
-            "previewLimit": 50,
-            "server": "localhost",
-            "port": 3306,
-            "driver": "MySQL",
-            "name": "MySql 5 Local",
-            "group": "Work",
-            "database": "bonitakpi",
-            "username": "root",
-            "password": "bird"
-        },
-        {
-            "mysqlOptions": {
-                "authProtocol": "default"
-            },
-            "previewLimit": 50,
-            "server": "localhost",
-            "port": 3306,
-            "driver": "MySQL",
-            "name": "hibernate_test",
-            "database": "hibernate_test",
-            "username": "root",
-            "password": "admin",
-            "group": "Work"
         }
     ]
 }

@@ -89,7 +89,12 @@
             <version>2.8.6</version>
         </dependency>
 
-
+        <!-- https://mvnrepository.com/artifact/com.liferay/org.apache.commons.configuration -->
+        <dependency>
+            <groupId>com.liferay</groupId>
+            <artifactId>org.apache.commons.configuration</artifactId>
+            <version>1.10.LIFERAY-PATCHED-2</version>
+        </dependency>
 
         <!-- Bonita BDM -->
         <!--    Uncomment to add BDM dependencies -->
